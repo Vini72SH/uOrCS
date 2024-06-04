@@ -4,21 +4,11 @@ This is a veeeeeeeery minimalistic version of OrCS[1], the ORdinary Computer
 Simulator, which is based on SiNUCA[2].
 
 Professor Marco Zanata, PhD, removed this code from the original OrCS source and
-I (Gabriel G. de Brito) took the freedom to refactor it a little bit and call it
-"μOrCS" (i.e., "Micro OrCS").
+my friend Gabriel G. de Brito took the liberty of refactoring a little and calling
+“μOrCS” (i.e. “Micro OrCS”).
 
-There's some code and some declarations here that appear kinda weird. This is
-normal as they were removed from a much bigger codebase, where they made actual
-sense.
-
-Happy coding! ;)
-
-## Notice
-
-You may notice that much of this code does not follows the code conventions,
-which is really bad. There are plenty of historical reasons to that, but when
-refactoring I was not much strict with that, otherwise I would have to rewrite
-it all.
+In this release, I'm working on implementing a Branch Target Buffer and a gshare/bimodal Branch Predictor.
+uOrCS is trace driven, so by entering the main name of the memory, dynamic and static trace files contained in the folder, it is able to read the files and generate a report at the end about the branches and accuracy rate of the implemented methods.
 
 ## Refs
 
