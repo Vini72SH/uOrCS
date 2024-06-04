@@ -1,0 +1,37 @@
+# Definir o compilador
+CXX = g++
+
+# Definir flags de compilação
+CXXFLAGS = -Wall -g
+
+# Definir os arquivos fonte e objetos
+SRCS = test.cpp btb.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+# Definir o nome do executável
+TARGET = programa
+
+# Regra padrão para construir tudo
+all: $(TARGET)
+
+# Regra para construir o executável
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+
+# Regra para construir os arquivos objeto
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Regra para limpar os arquivos gerados pela compilação
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+# Regra para limpar completamente o diretório
+distclean: clean
+	rm -f *~
+
+# Especificar dependências explícitas
+teste.o: btb.hpp
+btb.o: btb.hpp
+
+.PHONY: all clean distclean
