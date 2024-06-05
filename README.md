@@ -14,4 +14,3 @@ uOrCS is trace driven, so by entering the main name of the memory, dynamic and s
 
 [1] - https://github.com/mazalves/OrCS
 [2] - https://bitbucket.org/mazalves/sinuca/src/master/
-# uOrCS
