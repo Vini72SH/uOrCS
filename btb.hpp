@@ -8,7 +8,8 @@
   TypeName(const TypeName&) = delete;      \
   void operator=(const TypeName&) = delete;
 
-#include <iostream> // uint_t
+#include <iostream> 
+#include <cstdint>
 
 class btb_input_t{
    public:
