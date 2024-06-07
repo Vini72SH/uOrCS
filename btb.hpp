@@ -56,7 +56,7 @@ class btb_t{
     void allocate();
     void btb_insert(uint64_t address, short br_type, uint64_t current_cycle);
     int btb_search_update(uint64_t address, uint64_t current_cycle);
-    void imprime();
+    void statistics();
     ~btb_t();
 
    private:

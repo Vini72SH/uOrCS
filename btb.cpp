@@ -127,7 +127,7 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
 };
 
 // =============================================================================
-void btb_t::imprime() {
+void btb_t::statistics() {
     int i, j, total;
     btb_set_t *set_atual;
     btb_input_t *entrada_atual;
@@ -151,7 +151,10 @@ void btb_t::imprime() {
             //std::cout << "==================================\n";
         }
     }
+
+    double result = ((double)btbHit / (double)totalBranch) * 100;
     std::cout << "Used/Total Sets: " << total << " / " << ASSOCIATIVE_SET << '\n';
+    std::cout << "BTB Accuracy (Hits/Total): " << result << '\n';
 };
 
 // =============================================================================

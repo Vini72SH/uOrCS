@@ -44,15 +44,10 @@ void processor_t::clock() {
 };
 
 // =============================================================================
-void processor_t::statistics() {
-    double accuracy = ((double)btb->btb_hit / (double)btb->total_branch) * 100;
+void processor_t::statistics() {;
     ORCS_PRINTF("######################################################\n");
     ORCS_PRINTF("processor_t\n");
-    ORCS_PRINTF("Total Cyles: %ld\n", global_cycle);
-    ORCS_PRINTF("Total Branch's: %ld\n", btb->total_branch);
-    ORCS_PRINTF("BTB-Hit: %ld\n", btb->btb_hit);
-    ORCS_PRINTF("BTB Accuracy: %f\n", accuracy);
-    btb->imprime();
+    btb->statistics();
 };
 
 // =============================================================================
