@@ -1,7 +1,7 @@
 #ifndef PROCESSOR_HPP
 #define PROCESSOR_HPP
 
-#include "btb.hpp"             // btb_t
+#include "btb.hpp"              // btb_t
 
 class processor_t {
    public:

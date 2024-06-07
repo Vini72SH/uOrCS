@@ -13,7 +13,6 @@
 
 class btb_input_t{
    public:
-
     uint64_t instruction_address;
     uint64_t last_access_cycle;
     short type_branch;

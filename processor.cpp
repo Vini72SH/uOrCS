@@ -30,9 +30,7 @@ void processor_t::clock() {
     }
 
     if (new_instruction.opcode_operation == INSTRUCTION_OPERATION_BRANCH) {
-        btb->total_branch++;
         if (btb->btb_search_update(new_instruction.opcode_address, global_cycle)) {
-            btb->btb_hit++;
             this->global_cycle++;
         } else {
             btb->btb_insert(new_instruction.opcode_address,
@@ -47,7 +45,6 @@ void processor_t::clock() {
 
 // =============================================================================
 void processor_t::statistics() {
-    //btb->imprime();
     double accuracy = ((double)btb->btb_hit / (double)btb->total_branch) * 100;
     ORCS_PRINTF("######################################################\n");
     ORCS_PRINTF("processor_t\n");
@@ -55,6 +52,7 @@ void processor_t::statistics() {
     ORCS_PRINTF("Total Branch's: %ld\n", btb->total_branch);
     ORCS_PRINTF("BTB-Hit: %ld\n", btb->btb_hit);
     ORCS_PRINTF("BTB Accuracy: %f\n", accuracy);
+    btb->imprime();
 };
 
 // =============================================================================
