@@ -17,7 +17,9 @@ processor_t::processor_t(){};
 void processor_t::allocate() {
     this->global_cycle = 0;
     this->btb = new btb_t;
+    this->predictors = new predictors_t;
     this->btb->allocate();
+    this->predictors->allocate();
 };
 
 // =============================================================================
@@ -48,11 +50,15 @@ void processor_t::statistics() {;
     ORCS_PRINTF("######################################################\n");
     ORCS_PRINTF("processor_t\n");
     btb->statistics();
+    ORCS_PRINTF("=============================\n");
+    predictors->statistics();
 };
 
 // =============================================================================
 processor_t::~processor_t(){
     this->global_cycle = 0;
     delete this->btb;
+    delete this->predictors;
     this->btb = nullptr;
+    this->predictors = nullptr;
 };

@@ -19,11 +19,14 @@ SRC_PROCESSOR =	 	processor.cpp
 
 SRC_BTB = 			btb.cpp
 
+SRC_BRANCH = 		branch_predictor.cpp
+
 SRC_CORE =  simulator.cpp orcs_engine.cpp\
 			$(SRC_TRACE_READER)	\
 			$(SRC_PACKAGE) \
 			$(SRC_PROCESSOR)\
-			$(SRC_BTB)
+			$(SRC_BTB)\
+			$(SRC_BRANCH)
 
 ################################################################################
 OBJS_CORE = ${SRC_CORE:.cpp=.o}

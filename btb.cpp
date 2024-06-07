@@ -30,6 +30,7 @@ btb_set_t::btb_set_t() {
 
 // =============================================================================
 void btb_set_t::allocate_set() {
+    // Assigns nullptr to all pointers
     this->inputs = new btb_input_t*[INPUT];
     for (int i = 0; i < INPUT; ++i)
         this->inputs[i] = nullptr;
@@ -37,6 +38,7 @@ void btb_set_t::allocate_set() {
 
 // =============================================================================
 btb_set_t::~btb_set_t() {
+    // Frees all allocated memory
     if (this->inputs != nullptr) {
         for (int i = 0; i < INPUT; ++i)
             delete this->inputs[i];
@@ -55,6 +57,7 @@ void btb_t::allocate() {
     this->btbHit = 0;
     this->totalBranch = 0;
     this->sets = new btb_set_t*[ASSOCIATIVE_SET];
+    // Assigns nullptr to all pointers
     for (int i = 0; i < ASSOCIATIVE_SET; ++i) {
         this->sets[i] = nullptr;
     }
@@ -62,6 +65,7 @@ void btb_t::allocate() {
 
 // =============================================================================
 void btb_t::btb_insert(uint64_t address, short br_type, uint64_t current_cycle) {
+    // If the set does not exist, create it
     uint32_t address_set = set_ind(address);
     if (this->sets[address_set] == nullptr) {
         this->sets[address_set] = new btb_set_t();
@@ -100,6 +104,7 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
     uint32_t address_set = set_ind(address);
     btb_set_t *current_set = this->sets[address_set];
 
+
     if (current_set == nullptr)
         return 0;
 
@@ -118,6 +123,7 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
 
     if(index != i) return 0;
 
+    // Update input
     current_input = current_set->inputs[index];
     current_input->last_access_cycle = current_cycle;
     totalBranch++;
