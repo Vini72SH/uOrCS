@@ -15,8 +15,8 @@ class btb_input_t{
    public:
     uint64_t instruction_address;
     uint64_t last_access_cycle;
-    short type_branch;
-    bool vality_bit;
+    short typeBranch;
+    bool valityBit;
 
     // =========================================================================
     // Methods.
@@ -46,8 +46,8 @@ class btb_set_t{
 class btb_t{
    public:
     btb_set_t **sets;
-    long int btb_hit;
-    long int total_branch;
+    long int btbHit;
+    long int totalBranch;
 
     // =========================================================================
     // Methods.

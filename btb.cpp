@@ -10,8 +10,12 @@ uint64_t set_ind(uint64_t address) {
 
 // BTB_INPUT_T METHODS //
 // =============================================================================
-btb_input_t::btb_input_t() : instruction_address(0), last_access_cycle(0), 
-                             type_branch(0), vality_bit(false) {};
+btb_input_t::btb_input_t() {
+    instruction_address = 0;
+    last_access_cycle = 0;
+    typeBranch = 0;
+    valityBit = false;
+};
 
 // =============================================================================
 btb_input_t::~btb_input_t() {};
@@ -20,7 +24,9 @@ btb_input_t::~btb_input_t() {};
 
 // BTB_SET_T METHODS //
 // =============================================================================
-btb_set_t::btb_set_t() : inputs(nullptr) {};
+btb_set_t::btb_set_t() {
+    inputs = nullptr;
+};
 
 // =============================================================================
 void btb_set_t::allocate_set() {
@@ -46,8 +52,8 @@ btb_t::btb_t() {};
 
 // =============================================================================
 void btb_t::allocate() {
-    this->btb_hit = 0;
-    this->total_branch = 0;
+    this->btbHit = 0;
+    this->totalBranch = 0;
     this->sets = new btb_set_t*[ASSOCIATIVE_SET];
     for (int i = 0; i < ASSOCIATIVE_SET; ++i) {
         this->sets[i] = nullptr;
@@ -81,10 +87,10 @@ void btb_t::btb_insert(uint64_t address, short br_type, uint64_t current_cycle) 
 
     /* Set the input */
     current_set->inputs[index]->instruction_address = address;
-    current_set->inputs[index]->type_branch = br_type;
+    current_set->inputs[index]->typeBranch = br_type;
     current_set->inputs[index]->last_access_cycle = current_cycle;
-    current_set->inputs[index]->vality_bit = true;
-    total_branch++;
+    current_set->inputs[index]->valityBit = true;
+    totalBranch++;
 };
 
 // =============================================================================
@@ -103,7 +109,7 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
         current_input = current_set->inputs[i];
         if (current_input != nullptr) {
             if ((current_input->instruction_address == address) && 
-               (current_input->vality_bit == true)) {
+               (current_input->valityBit == true)) {
                 index = i;
                 break;
             }
@@ -114,8 +120,8 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
 
     current_input = current_set->inputs[index];
     current_input->last_access_cycle = current_cycle;
-    total_branch++;
-    btb_hit++;
+    totalBranch++;
+    btbHit++;
 
     return 1;
 };
