@@ -18,7 +18,7 @@ class trace_reader_t {
     bool is_inside_bbl;
     uint32_t currect_bbl;
     uint32_t currect_opcode;
-
+ 
     /// Controls the static dictionary.
     /// Total of BBLs for the static file.
     /// Total of instructions for each BBL.

@@ -1,6 +1,6 @@
 #include "opcode_package.hpp"
 
-#include <cstdio>  // sprintf
+#include <cstdio>  // sprintf 
 
 // =============================================================================
 opcode_package_t::opcode_package_t() {

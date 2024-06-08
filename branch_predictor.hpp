@@ -1,7 +1,14 @@
 #ifndef __BRANCH__
 #define __BRANCH__
 
-#define BITS 10
+#define BITS 25
+#define TAKEN 1
+#define NTAKEN 0
+#define SYSCALL 0
+#define CALL 1
+#define RETURN 2
+#define UNCOND 3
+#define COND 4
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
   TypeName(const TypeName&) = delete;      \
   void operator=(const TypeName&) = delete;
@@ -58,6 +65,7 @@ class predictors_t{
     long int truePredicts;
     uint64_t currentAddress;
     uint64_t addressSize;
+    uint8_t currentBranch;
     bool gsharePredict;
     bool bimodalPredict;
     bool hitPredict;
@@ -70,7 +78,7 @@ class predictors_t{
     predictors_t();
     void allocate();
     uint64_t getIndex(uint64_t address);
-    bool predictBranch(uint64_t address, uint64_t add_size);
+    bool predictBranch(uint64_t address, uint64_t add_size, uint8_t branch);
     bool updatePredictors(uint64_t next_address);
     bool getHit();
     bool getBranchResult();

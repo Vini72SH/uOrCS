@@ -5,7 +5,7 @@
 
 class processor_t;
 class trace_reader_t;
-
+ 
 // =============================================================================
 class orcs_engine_t {
    private:

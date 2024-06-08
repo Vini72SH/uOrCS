@@ -8,24 +8,24 @@ predictorBimodal_t::predictorBimodal_t() {
 
 // =============================================================================
 void predictorBimodal_t::allocate() {
-    maxBranch = 0;
-    truePredicts = 0;
-    int size = (1 << BITS);
-    counterTable = new short[size];
+    this->maxBranch = 0;
+    this->truePredicts = 0;
+    uint64_t size = (1 << BITS);
+    this->counterTable = new short[size];
 
-    if (counterTable == nullptr) 
+    if (this->counterTable == nullptr) 
         return;
 
     // Sets 50% as likely Taken
     // and 50% as likely Not Taken
-    for (int i = 0; i < size; ++i)
-        counterTable[i] = 1 + (i % 2);
+    for (uint64_t i = 0; i < size; ++i)
+        this->counterTable[i] = 1 + (i % 2);
 };
 
 // =============================================================================
 uint64_t predictorBimodal_t::getIndex(uint64_t address) {
     // Get the least significant m BITS
-    uint32_t index = (1 << BITS) - 1;
+    uint64_t index = (1 << BITS) - 1;
     index = index & address;
 
     return index;
@@ -64,10 +64,7 @@ void predictorBimodal_t::updateBimodal(uint64_t address, bool branch_result) {
 
 // =============================================================================
 predictorBimodal_t::~predictorBimodal_t() {
-    maxBranch = 0;
-    truePredicts = 0;
     delete[] counterTable;
-    counterTable = nullptr;
 };
 // =============================================================================
 
@@ -79,22 +76,22 @@ predictorGshare_t::predictorGshare_t() {
 
 // =============================================================================
 void predictorGshare_t::allocate() {
-    maxBranch = 0;
-    truePredicts = 0;
-    int size = (1 << BITS);
-    counterTable = new short[size];
+    this->maxBranch = 0;
+    this->truePredicts = 0;
+    uint64_t size = (1 << BITS);
+    this->counterTable = new short[size];
 
-    if (counterTable == nullptr) 
+    if (this->counterTable == nullptr) 
         return;
 
     // Sets 50% as likely Taken
     // and 50% as likely Not Taken
-    for (int i = 0; i < size; ++i)
-        counterTable[i] = 1 + (i % 2);
+    for (uint64_t i = 0; i < size; ++i)
+        this->counterTable[i] = 1 + (i % 2);
     
     // Sets the GHR to zero
-    for (int i = 0; i < BITS; ++i)
-        ghr[i] = false;
+    for (uint64_t i = 0; i < BITS; ++i)
+        this->ghr[i] = false;
 };
 
 // =============================================================================
@@ -169,10 +166,7 @@ void predictorGshare_t::updateGshare(uint64_t address, bool branch_result) {
 
 // =============================================================================
 predictorGshare_t::~predictorGshare_t() {
-    maxBranch = 0;
-    truePredicts = 0;
     delete[] counterTable;
-    counterTable = nullptr;
 };
 
 // =============================================================================
@@ -187,25 +181,26 @@ predictors_t::predictors_t() {
 
 // =============================================================================
 void predictors_t::allocate() {
-    int size = (1 << BITS);
-    valid = false;
-    maxBranch = 0;
-    truePredicts = 0;
-    addressSize = 0;
-    hitPredict = false;
-    gsharePredict = false;
-    bimodalPredict = false;
-    currentAddress = 0;
-    bimodal = new predictorBimodal_t;
-    gshare = new predictorGshare_t;
-    select = new short[size];
-    bimodal->allocate();
-    gshare->allocate();
+    uint64_t size = (1 << BITS);
+    this->valid = false;
+    this->maxBranch = 0;
+    this->truePredicts = 0;
+    this->addressSize = 0;
+    this->currentBranch = 0;
+    this->hitPredict = false;
+    this->gsharePredict = false;
+    this->bimodalPredict = false;
+    this->currentAddress = 0;
+    this->bimodal = new predictorBimodal_t;
+    this->gshare = new predictorGshare_t;
+    this->select = new short[size];
+    this->bimodal->allocate();
+    this->gshare->allocate();
 
     // Sets 50% as likely Bimodal
     // and 50% as likely Gshare
-    for (int i = 0; i < size; ++i) 
-        select[i] = 1 + (i % 2);
+    for (uint64_t i = 0; i < size; ++i) 
+        this->select[i] = 2;
 };
 
 // =============================================================================
@@ -217,7 +212,7 @@ uint64_t predictors_t::getIndex(uint64_t address) {
 };
 
 // =============================================================================
-bool predictors_t::predictBranch(uint64_t address, uint64_t add_size) {
+bool predictors_t::predictBranch(uint64_t address, uint64_t add_size, uint8_t type_branch) {
     if ((bimodal == nullptr) || (gshare == nullptr) || (select == nullptr))
         return false;
 
@@ -231,8 +226,11 @@ bool predictors_t::predictBranch(uint64_t address, uint64_t add_size) {
     addressSize = add_size;
     gsharePredict = gsPredict;
     bimodalPredict = bPredict;
+    currentBranch = type_branch;
     valid = true;
-    maxBranch++;
+    
+    if (type_branch == COND)
+        maxBranch++;
 
     // Returns the most likely prediction
     if (select[index] >> 1) {
@@ -247,6 +245,11 @@ bool predictors_t::updatePredictors(uint64_t next_address) {
     if ((bimodal == nullptr) || (gshare == nullptr) || (select == nullptr))
         return false;
     
+    if (currentBranch != COND) {
+        valid = false;
+        return true;
+    }
+
     if (valid) {
         // Acquire results and update predictors individually
         uint64_t index = getIndex(currentAddress);
@@ -301,27 +304,16 @@ void predictors_t::statistics() {
                            (double)gshare->maxBranch) * 100;
     double accuracy = ((double)truePredicts / (double)maxBranch) * 100;
 
-    printf("Bimodal Accuracy: %f\n", bimodalPercent);
-    printf("Gshare Accuracy: %f\n", gsharePercent);
-    printf("Combining predictors Accuracy: %f\n", accuracy);
+    printf("Bimodal Accuracy: %.2f\n", bimodalPercent);
+    printf("G-Share Accuracy: %.2f\n", gsharePercent);
+    printf("Combining predictors Accuracy: %.2f\n", accuracy);
 };
 
 // =============================================================================
 predictors_t::~predictors_t() {
-    valid = 0;
-    maxBranch = 0;
-    truePredicts = 0;
-    addressSize = 0;
-    hitPredict = false;
-    gsharePredict = false;
-    bimodalPredict = false;
-    currentAddress = 0;
     delete bimodal;
     delete gshare;
     delete[] select;
-    bimodal = nullptr;
-    gshare = nullptr;
-    select = nullptr;
 };
 
 // =============================================================================

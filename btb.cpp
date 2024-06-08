@@ -54,6 +54,8 @@ btb_t::btb_t() {};
 
 // =============================================================================
 void btb_t::allocate() {
+    this->typeBranch = 0;
+    this->previousHitMiss = false;
     this->btbHit = 0;
     this->totalBranch = 0;
     this->sets = new btb_set_t*[ASSOCIATIVE_SET];
@@ -61,6 +63,21 @@ void btb_t::allocate() {
     for (int i = 0; i < ASSOCIATIVE_SET; ++i) {
         this->sets[i] = nullptr;
     }
+};
+
+// =============================================================================
+bool btb_t::getPrevious() {
+    return previousHitMiss;
+};
+
+// =============================================================================
+short btb_t::getTypeBranch() {
+    return typeBranch;
+};
+
+// =============================================================================
+void btb_t::setPrevious(bool hit_miss) {
+    previousHitMiss = hit_miss;
 };
 
 // =============================================================================
@@ -94,6 +111,7 @@ void btb_t::btb_insert(uint64_t address, short br_type, uint64_t current_cycle) 
     current_set->inputs[index]->typeBranch = br_type;
     current_set->inputs[index]->last_access_cycle = current_cycle;
     current_set->inputs[index]->valityBit = true;
+    this->typeBranch = br_type;
     totalBranch++;
 };
 
@@ -126,6 +144,7 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
     // Update input
     current_input = current_set->inputs[index];
     current_input->last_access_cycle = current_cycle;
+    this->typeBranch = current_input->typeBranch;
     totalBranch++;
     btbHit++;
 
@@ -159,8 +178,8 @@ void btb_t::statistics() {
     }
 
     double result = ((double)btbHit / (double)totalBranch) * 100;
-    std::cout << "Used/Total Sets: " << total << " / " << ASSOCIATIVE_SET << '\n';
-    std::cout << "BTB Accuracy (Hits/Total): " << result << '\n';
+    printf("Used/Total Sets: %d / %d\n", total, ASSOCIATIVE_SET);
+    printf("BTB Accuracy (Hits/Total): %f\n", result);
 };
 
 // =============================================================================

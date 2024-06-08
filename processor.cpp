@@ -31,17 +31,63 @@ void processor_t::clock() {
         orcs_engine.simulator_alive = false;
     }
 
-    if (new_instruction.opcode_operation == INSTRUCTION_OPERATION_BRANCH) {
-        if (btb->btb_search_update(new_instruction.opcode_address, global_cycle)) {
-            this->global_cycle++;
+    // Checks if the data is up to date
+    uint64_t address = new_instruction.opcode_address;
+    bool update = predictors->updatePredictors(address);
+    if (update) {
+        // BTB-Hit | Conditional and Unconditional Cases
+        if (btb->getPrevious() == HIT) {
+            // If UNCOND, 0 latency
+            if (btb->getTypeBranch() != BRANCH_COND) {
+                this->global_cycle++;
+            } else {
+                if (predictors->getBranchResult() == TAKEN) {
+                // If Taken and Predict Taken - 0 latency
+                // If Taken and Predict Not Taken - 512 latency
+                    if (predictors->getHit())
+                        this->global_cycle++;
+                    else
+                        this->global_cycle += 512;
+                } else {
+                // If Not Taken and Predict Taken - 512 latency
+                // If Not Taken and Predict Not Taken - 0 latency
+                    if (predictors->getHit()) 
+                        this->global_cycle += 512;
+                    else 
+                        this->global_cycle++;
+                }
+            }
+
         } else {
-            btb->btb_insert(new_instruction.opcode_address,
-                            new_instruction.branch_type,
-                            global_cycle);
-            this->global_cycle += 12;
+            // BTB-Miss | Conditional and Unconditional Cases
+            if (btb->getTypeBranch() != BRANCH_COND) {
+                this->global_cycle += 12;
+            } else {
+                // If Taken, 512 latency
+                // If Not Taken, 0 latency
+                if (predictors->getBranchResult() == TAKEN)
+                    this->global_cycle += 512;
+                else 
+                    this->global_cycle++;
+            }
         }
+        
     } else {
-        this->global_cycle++;
+        global_cycle++;
+    }
+
+    if (new_instruction.opcode_operation == INSTRUCTION_OPERATION_BRANCH) {
+        address = new_instruction.opcode_address;
+        uint64_t opcode_size = new_instruction.opcode_size;
+        uint8_t branch = new_instruction.branch_type;
+
+        predictors->predictBranch(address, opcode_size, branch);
+        if (btb->btb_search_update(address, global_cycle)) {
+            btb->setPrevious(HIT);
+        } else {
+            btb->btb_insert(address, branch, global_cycle);
+            btb->setPrevious(MISS);
+        }
     }
 };
 
@@ -49,9 +95,11 @@ void processor_t::clock() {
 void processor_t::statistics() {;
     ORCS_PRINTF("######################################################\n");
     ORCS_PRINTF("processor_t\n");
+    ORCS_PRINTF("=============================\n");
     btb->statistics();
     ORCS_PRINTF("=============================\n");
     predictors->statistics();
+    ORCS_PRINTF("Total Cycles: %ld\n", global_cycle);
 };
 
 // =============================================================================

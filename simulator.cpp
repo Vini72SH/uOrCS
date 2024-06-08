@@ -47,7 +47,7 @@ static void process_argv(int argc, char **argv) {
                 ORCS_PRINTF(">> getopt returned character code 0%o ??\n", opt);
         }
     }
-
+ 
     if (optind < argc) {
         ORCS_PRINTF("Non-option ARGV-elements: ");
         while (optind < argc) ORCS_PRINTF("%s ", argv[optind++]);

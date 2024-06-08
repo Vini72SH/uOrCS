@@ -65,7 +65,7 @@ void trace_reader_t::allocate(char *trace_file) {
     this->is_inside_bbl = false;
     this->currect_bbl = 0;
     this->currect_opcode = 0;
-
+ 
     // Obtain the number of BBLs.
     this->get_total_bbls();
 

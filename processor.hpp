@@ -3,7 +3,7 @@
 
 #include "btb.hpp"              // btb_t
 #include "branch_predictor.hpp" // predictors_t
-
+ 
 class processor_t {
    public:
     btb_t *btb;

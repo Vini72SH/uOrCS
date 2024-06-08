@@ -2,6 +2,8 @@
 #define __BTB__
 
 // BTB Defines
+#define HIT 1
+#define MISS 0
 #define INPUT 12
 #define ASSOCIATIVE_SET 1024
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
@@ -45,6 +47,8 @@ class btb_set_t{
 
 class btb_t{
    public:
+    short typeBranch;
+    bool previousHitMiss;
     btb_set_t **sets;
     long int btbHit;
     long int totalBranch;
@@ -54,6 +58,9 @@ class btb_t{
     // =========================================================================
     btb_t();
     void allocate();
+    bool getPrevious();
+    short getTypeBranch();
+    void setPrevious(bool hit_miss);
     void btb_insert(uint64_t address, short br_type, uint64_t current_cycle);
     int btb_search_update(uint64_t address, uint64_t current_cycle);
     void statistics();
