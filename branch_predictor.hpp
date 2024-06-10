@@ -88,5 +88,5 @@ class predictors_t{
    private:
     DISALLOW_COPY_AND_ASSIGN(predictors_t)
 };
-
+ 
 #endif

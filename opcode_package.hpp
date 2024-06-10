@@ -2,7 +2,7 @@
 #define UORCS_OPCODE_PACKAGE_HPP_
 
 #include "simulator.hpp"  // TRACE_LINE_SIZE, branch_t, instruction_operation_t
-
+ 
 // =============================================================================
 class opcode_package_t {
    public:

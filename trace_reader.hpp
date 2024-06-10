@@ -1,6 +1,6 @@
 #ifndef TRACE_READER_HPP
 #define TRACE_READER_HPP
-
+ 
 #include <zlib.h>  // gzFile
 
 #include <cstdint>  // uint32_t

@@ -41,23 +41,14 @@ void processor_t::clock() {
             if (btb->getTypeBranch() != BRANCH_COND) {
                 this->global_cycle++;
             } else {
-                if (predictors->getBranchResult() == TAKEN) {
-                // If Taken and Predict Taken - 0 latency
-                // If Taken and Predict Not Taken - 512 latency
+                // If COND
+                    // HIT - 0 latency
+                    // MISS - 512 latency
                     if (predictors->getHit())
                         this->global_cycle++;
                     else
                         this->global_cycle += 512;
-                } else {
-                // If Not Taken and Predict Taken - 512 latency
-                // If Not Taken and Predict Not Taken - 0 latency
-                    if (predictors->getHit()) 
-                        this->global_cycle += 512;
-                    else 
-                        this->global_cycle++;
-                }
             }
-
         } else {
             // BTB-Miss | Conditional and Unconditional Cases
             if (btb->getTypeBranch() != BRANCH_COND) {
@@ -95,11 +86,9 @@ void processor_t::clock() {
 void processor_t::statistics() {;
     ORCS_PRINTF("######################################################\n");
     ORCS_PRINTF("processor_t\n");
-    ORCS_PRINTF("=============================\n");
     btb->statistics();
-    ORCS_PRINTF("=============================\n");
     predictors->statistics();
-    ORCS_PRINTF("Total Cycles: %ld\n", global_cycle);
+    ORCS_PRINTF("Simulation Time: %ld\n", global_cycle);
 };
 
 // =============================================================================

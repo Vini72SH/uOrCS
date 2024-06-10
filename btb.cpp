@@ -153,11 +153,12 @@ int btb_t::btb_search_update(uint64_t address, uint64_t current_cycle) {
 
 // =============================================================================
 void btb_t::statistics() {
-    int i, j, total;
+    int i, j, total, inputs;
     btb_set_t *set_atual;
     btb_input_t *entrada_atual;
 
     total = 0;
+    inputs = 0;
     for (i = 0; i < ASSOCIATIVE_SET; ++i) {
         set_atual = this->sets[i];
         if (set_atual != nullptr) {
@@ -167,6 +168,7 @@ void btb_t::statistics() {
             for (j = 0; j < INPUT; ++j) {
                 entrada_atual = set_atual->inputs[j];
                 if (entrada_atual != nullptr) {
+                    ++inputs;
                     //printf("Add: %ld BR: %d Cycle: %ld\n",
                     //       entrada_atual->instruction_address,
                     //       entrada_atual->type_branch, 
@@ -178,8 +180,13 @@ void btb_t::statistics() {
     }
 
     double result = ((double)btbHit / (double)totalBranch) * 100;
+    printf("\n=== Branch Target Buffer Statistics === \n");
+    printf("----------------------------------------\n");
+    printf("Used/Total Inputs: %d / %d\n", inputs, INPUT * ASSOCIATIVE_SET);
     printf("Used/Total Sets: %d / %d\n", total, ASSOCIATIVE_SET);
-    printf("BTB Accuracy (Hits/Total): %f\n", result);
+    printf("BTB Accuracy: %f\n", result);
+    printf("Hits / Total Branch: %ld / %ld\n", btbHit, totalBranch);
+    printf("========================================\n");
 };
 
 // =============================================================================

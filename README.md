@@ -11,6 +11,6 @@ In this release, I'm working on implementing a Branch Target Buffer and a gshare
 uOrCS is trace driven, so by entering the main name of the memory, dynamic and static trace files contained in the folder, it is able to read the files and generate a report at the end about the branches and accuracy rate of the implemented methods.
 
 ## Refs
-
+ 
 [1] - https://github.com/mazalves/OrCS
 [2] - https://bitbucket.org/mazalves/sinuca/src/master/

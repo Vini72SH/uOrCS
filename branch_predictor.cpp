@@ -244,13 +244,14 @@ bool predictors_t::predictBranch(uint64_t address, uint64_t add_size, uint8_t ty
 bool predictors_t::updatePredictors(uint64_t next_address) {
     if ((bimodal == nullptr) || (gshare == nullptr) || (select == nullptr))
         return false;
-    
-    if (currentBranch != COND) {
-        valid = false;
-        return true;
-    }
 
     if (valid) {
+
+        if (currentBranch != COND) {
+            valid = false;
+            return true;
+        }
+
         // Acquire results and update predictors individually
         uint64_t index = getIndex(currentAddress);
         branchResult = (currentAddress + addressSize != next_address);
@@ -304,9 +305,13 @@ void predictors_t::statistics() {
                            (double)gshare->maxBranch) * 100;
     double accuracy = ((double)truePredicts / (double)maxBranch) * 100;
 
+    printf("\n=== Branch Predictor Combination Statistics === \n");
+    printf("------------------------------------------------\n");
     printf("Bimodal Accuracy: %.2f\n", bimodalPercent);
     printf("G-Share Accuracy: %.2f\n", gsharePercent);
-    printf("Combining predictors Accuracy: %.2f\n", accuracy);
+    printf("Combining Predictors Accuracy: %.2f\n", accuracy);
+    printf("Hits / Total Branch: %ld / %ld\n", truePredicts, maxBranch);
+    printf("================================================\n");
 };
 
 // =============================================================================

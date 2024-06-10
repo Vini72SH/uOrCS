@@ -3,7 +3,7 @@ LD = g++
 CPPFLAGS = $(FLAGS)
 BIN_NAME = uorcs
 RM = rm -f
- 
+
 FLAGS =   -O3 -ggdb -Wall -Wextra -Werror -std=c++11
 LDFLAGS = -ggdb
 

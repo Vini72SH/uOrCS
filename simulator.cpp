@@ -7,7 +7,7 @@
 #include "processor.hpp"
 
 orcs_engine_t orcs_engine;
-
+ 
 // =============================================================================
 static void display_use() {
     ORCS_PRINTF("**** OrCS - Ordinary Computer Simulator ****\n\n");
